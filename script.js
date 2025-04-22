@@ -45,7 +45,8 @@ function renderTasks() {
           <input type="checkbox" ${task.status === "completed" ? "checked" : ""} onchange="toggleStatus(${index})">
           <span class="taskText">${task.name}</span>
         </div>
-        <span class="menuBtn" onclick="deleteTask(${index})">⋯</span>
+        <span class="menuBtn" onclick="showMenu(${index}, event)">⋯</span>
+
       `;
       taskList.appendChild(li);
     }
@@ -58,10 +59,47 @@ function toggleStatus(index) {
   renderTasks();
 }
 
-function deleteTask(index) {
-  tasks.splice(index, 1);
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  renderTasks();
+let currentTaskIndex = null;
+
+document.addEventListener("click", (e) => {
+  const menu = document.getElementById("contextMenu");
+  if (!e.target.matches(".menuBtn")) {
+    menu.style.display = "none";
+  }
+});
+
+function showMenu(index, event) {
+  event.preventDefault();
+  currentTaskIndex = index;
+
+  const menu = document.getElementById("contextMenu");
+  menu.style.display = "flex";
+  menu.style.top = `${event.clientY}px`;
+  menu.style.left = `${event.clientX}px`;
 }
+
+function editTask() {
+  const newName = prompt("Edit task:", tasks[currentTaskIndex].name);
+  if (newName !== null) {
+    tasks[currentTaskIndex].name = newName.trim();
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTasks();
+  }
+  hideMenu();
+}
+
+function confirmDelete() {
+  if (confirm("Are you sure you want to delete this task?")) {
+    tasks.splice(currentTaskIndex, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTasks();
+  }
+  hideMenu();
+}
+
+function hideMenu() {
+  document.getElementById("contextMenu").style.display = "none";
+}
+
 
 renderTasks();
