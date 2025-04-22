@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To Do List</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="todo-box">
+    <h2>To Do List</h2>
+    <div class="inputField">
+      <input type="text" placeholder="Add a new task">
+      <button class="addBtn">➕</button>
+    </div>
+    <div class="filters">
+      <span class="filter active" data-filter="all">All</span>
+      <span class="filter" data-filter="pending">Pending</span>
+      <span class="filter" data-filter="completed">Completed</span>
+      <button class="clearBtn">Clear All</button>
+    </div>
+    <ul class="taskList"></ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
