@@ -63,7 +63,7 @@ let currentTaskIndex = null;
 
 document.addEventListener("click", (e) => {
   const menu = document.getElementById("contextMenu");
-  if (!e.target.matches(".menuBtn")) {
+  if (!e.target.classList.contains("menuBtn")) {
     menu.style.display = "none";
   }
 });
@@ -79,26 +79,42 @@ function showMenu(index, event) {
 }
 
 function editTask() {
-  const newName = prompt("Edit task:", tasks[currentTaskIndex].name);
-  if (newName !== null) {
-    tasks[currentTaskIndex].name = newName.trim();
+  const li = document.querySelectorAll(".taskList li")[currentTaskIndex];
+  const textSpan = li.querySelector(".taskText");
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = tasks[currentTaskIndex].name;
+  input.className = "editInput";
+
+  input.addEventListener("blur", () => {
+    tasks[currentTaskIndex].name = input.value.trim();
     localStorage.setItem("tasks", JSON.stringify(tasks));
     renderTasks();
-  }
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      input.blur();
+    }
+  });
+
+  textSpan.replaceWith(input);
+  input.focus();
+
   hideMenu();
 }
 
 function confirmDelete() {
-  if (confirm("Are you sure you want to delete this task?")) {
-    tasks.splice(currentTaskIndex, 1);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    renderTasks();
-  }
+  tasks.splice(currentTaskIndex, 1);
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  renderTasks();
   hideMenu();
 }
 
 function hideMenu() {
-  document.getElementById("contextMenu").style.display = "none";
+  const menu = document.getElementById("contextMenu");
+  menu.style.display = "none";
 }
 
 
